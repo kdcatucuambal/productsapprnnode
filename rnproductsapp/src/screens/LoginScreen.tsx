@@ -1,26 +1,34 @@
-import React from 'react';
-import {Platform, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard} from "react-native";
+import React, {useContext, useEffect} from 'react';
+import {Platform, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert} from "react-native";
 import Background from "../components/Background";
 import WhiteLogo from "../components/WhiteLogo";
 import {loginStyle} from "../theme/loginTheme";
 import {useForm} from "../hooks/useForm";
 import {StackRootScreens} from "../navigator/Navigator";
-import {NativeStackScreenProps} from "react-native-screens/native-stack";
 import {StackScreenProps} from "@react-navigation/stack";
+import {AuthContext} from "../context/AuthContext";
+
 
 interface Props extends StackScreenProps<StackRootScreens, "LoginScreen"> {}
 
-
 const LoginScreen = ({navigation}: Props) => {
+
+    const {signIn, errorMessage, removeError} = useContext(AuthContext);
 
     const {email, password, onChange} = useForm({
         email: '',
         password: ''
     });
 
+    useEffect(()=>{
+        if (errorMessage.length === 0) return;
+
+        Alert.alert("Login incorrect", errorMessage, [{text: 'Ok', onPress:()=>{removeError()}}]);
+    }, [errorMessage])
+
     const onLogin = ()=>{
-        console.log({email, password})
         Keyboard.dismiss();
+        signIn({email, password});
     }
 
     return <>
