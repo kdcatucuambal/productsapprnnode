@@ -69,7 +69,7 @@ export const ProductsProvider = ({children}: any) => {
         }
 
         const form = new FormData();
-        form.append("achivo", fileToUpload);
+        form.append("archivo", fileToUpload);
         try {
             const resp = await cafeApi.put(`uploads/productos/${id}`, form);
             console.log(resp);
